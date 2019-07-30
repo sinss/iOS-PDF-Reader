@@ -35,6 +35,20 @@
                                     <outlet property="delegate" destination="iqd-FA-oQ4" id="J1W-8Z-Zkg"/>
                                 </connections>
                             </collectionView>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="aAX-8s-Gdf">
+                                <rect key="frame" x="149" y="722" width="115" height="50"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="3 / 50" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rvk-Mt-tqG">
+                                        <rect key="frame" x="8" y="8" width="99" height="34"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.5" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="spp-zz-ZXW">
                                 <rect key="frame" x="0.0" y="818" width="414" height="44"/>
                                 <subviews>
@@ -73,6 +87,8 @@
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <connections>
                         <outlet property="collectionView" destination="xgz-br-S4l" id="4tX-Ot-xgt"/>
+                        <outlet property="pageNoContainer" destination="aAX-8s-Gdf" id="Y2B-Ud-Dmn"/>
+                        <outlet property="pageNoLabel" destination="Rvk-Mt-tqG" id="h4A-lL-e4I"/>
                         <outlet property="thumbnailCollectionControllerBottom" destination="8cX-bN-oYQ" id="izz-Un-BB6"/>
                         <outlet property="thumbnailCollectionControllerHeight" destination="pqu-BB-m1z" id="0NE-JL-KJc"/>
                         <outlet property="thumbnailCollectionControllerWidth" destination="AiN-T1-0xx" id="ccV-LP-TiX"/>
@@ -80,7 +96,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Olj-jR-VgF" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1172" y="444"/>
+            <point key="canvasLocation" x="1171.0144927536232" y="443.97321428571428"/>
         </scene>
         <!--Thumbnail Collection View Controller-->
         <scene sceneID="a0d-VQ-36h">

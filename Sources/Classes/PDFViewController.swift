@@ -76,6 +76,10 @@ public final class PDFViewController: UIViewController {
     /// Width of the thumbnail bar (used to resize on rotation events)
     @IBOutlet private var thumbnailCollectionControllerWidth: NSLayoutConstraint!
     
+    @IBOutlet weak var pageNoLabel: UILabel!
+    
+    @IBOutlet weak var pageNoContainer: UIView!
+    
     /// PDF document that should be displayed
     private var document: PDFDocument!
     
@@ -145,11 +149,16 @@ public final class PDFViewController: UIViewController {
         let width = min(thumbnailWidth, view.bounds.width)
         thumbnailCollectionControllerWidth.constant = width
         thumbnailCollectionControllerHeight.constant = 106
+        
+        pageNoContainer.layer.cornerRadius = 25
     }
     
     public override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         didSelectIndexPath(IndexPath(row: currentPageIndex, section: 0))
+        
+        //更新頁數
+        pageNoLabel.text = String(format: "%d / %d", (currentPageIndex + 1),  document.pageCount)
     }
     
     override public var prefersStatusBarHidden: Bool {
@@ -246,7 +255,7 @@ extension PDFViewController: PDFPageCollectionViewCellDelegate {
     ///
     /// - parameter shouldHide: whether or not the controller should hide the thumbnail controller
     private func hideThumbnailController(_ shouldHide: Bool) {
-        self.thumbnailCollectionControllerBottom.constant = shouldHide ? -thumbnailCollectionControllerHeight.constant : 0
+        self.thumbnailCollectionControllerBottom.constant = shouldHide ? -self.thumbnailCollectionControllerHeight.constant : 0
     }
     
     func handleSingleTap(_ cell: PDFPageCollectionViewCell, pdfPageView: PDFPageView) {
@@ -279,6 +288,9 @@ extension PDFViewController: UIScrollViewDelegate {
         if updatedPageIndex != currentPageIndex {
             currentPageIndex = updatedPageIndex
             thumbnailCollectionController?.currentPageIndex = currentPageIndex
+            
+            //更新頁數
+            pageNoLabel.text = String(format: "%d / %d", (currentPageIndex + 1),  document.pageCount)
         }
     }
 }
