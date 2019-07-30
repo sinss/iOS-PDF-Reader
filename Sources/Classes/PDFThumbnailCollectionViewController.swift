@@ -15,7 +15,7 @@ protocol PDFThumbnailControllerDelegate: class {
 }
 
 /// Bottom collection of thumbnails that the user can interact with
-internal final class PDFThumbnailCollectionViewController: UICollectionViewController {
+internal final class PDFThumbnailCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     /// Current document being displayed
     var document: PDFDocument!
     
@@ -45,6 +45,7 @@ internal final class PDFThumbnailCollectionViewController: UICollectionViewContr
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        collectionView.backgroundColor = UIColor.clear
         DispatchQueue.global(qos: .background).async {
             self.document.allPageImages(callback: { (images) in
                 DispatchQueue.main.async {
@@ -60,15 +61,30 @@ internal final class PDFThumbnailCollectionViewController: UICollectionViewContr
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as! PDFThumbnailCell
-        
+        cell.backgroundColor = UIColor.clear
+        cell.imageView?.backgroundColor = UIColor.clear
         cell.imageView?.image = pageImages?[indexPath.row]
-        cell.alpha = currentPageIndex == indexPath.row ? 1 : 0.2
+        if currentPageIndex == indexPath.row {
+            cell.layer.borderColor = UIColor.red.cgColor
+            cell.layer.borderWidth = 3
+        } else {
+            cell.layer.borderWidth = 0
+        }
+//        cell.alpha = currentPageIndex == indexPath.row ? 1 : 0.2
         
         return cell
     }
     
-    @objc func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: IndexPath) -> CGSize {
+    @objc func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return PDFThumbnailCell.cellSize
+    }
+    
+    @objc func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return 15
+    }
+    
+    @objc func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return 0
     }
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {

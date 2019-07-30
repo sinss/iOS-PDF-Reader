@@ -127,9 +127,6 @@ public final class PDFViewController: UIViewController {
         }
     }
     
-    /// Reset page when its unpresented
-    public var resetZoom: Bool = false
-    
     override public func viewDidLoad() {
         super.viewDidLoad()
     
@@ -147,6 +144,7 @@ public final class PDFViewController: UIViewController {
         let thumbnailWidth = (numberOfPages * PDFThumbnailCell.cellSize.width) + totalSpacing
         let width = min(thumbnailWidth, view.bounds.width)
         thumbnailCollectionControllerWidth.constant = width
+        thumbnailCollectionControllerHeight.constant = 106
     }
     
     public override func viewDidLayoutSubviews() {
@@ -252,15 +250,13 @@ extension PDFViewController: PDFPageCollectionViewCellDelegate {
     }
     
     func handleSingleTap(_ cell: PDFPageCollectionViewCell, pdfPageView: PDFPageView) {
+        //        TODO: 點擊不要關閉上面Bar
         var shouldHide: Bool {
-            guard let isNavigationBarHidden = navigationController?.isNavigationBarHidden else {
-                return false
-            }
-            return !isNavigationBarHidden
+            return (thumbnailCollectionControllerBottom.constant == 0)
         }
         UIView.animate(withDuration: 0.25) {
             self.hideThumbnailController(shouldHide)
-            self.navigationController?.setNavigationBarHidden(shouldHide, animated: true)
+            //self.navigationController?.setNavigationBarHidden(shouldHide, animated: true)
         }
     }
 }
@@ -281,9 +277,6 @@ extension PDFViewController: UIScrollViewDelegate {
         }
         
         if updatedPageIndex != currentPageIndex {
-            if resetZoom {
-                self.collectionView.reloadItems(at: [IndexPath(item: currentPageIndex, section: 0)])
-            }
             currentPageIndex = updatedPageIndex
             thumbnailCollectionController?.currentPageIndex = currentPageIndex
         }
