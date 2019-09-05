@@ -153,6 +153,11 @@ public final class PDFViewController: UIViewController {
         pageNoContainer.layer.cornerRadius = 25
     }
     
+    public override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        hidePageNoLabel()
+    }
+    
     public override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         didSelectIndexPath(IndexPath(row: currentPageIndex, section: 0))
@@ -215,19 +220,26 @@ public final class PDFViewController: UIViewController {
     
     /// Presents print sheet to print PDF
     private func print() {
-        guard UIPrintInteractionController.isPrintingAvailable else { return }
-        guard UIPrintInteractionController.canPrint(document.fileData) else { return }
-        guard document.password == nil else { return }
-        let printInfo = UIPrintInfo.printInfo()
-        printInfo.duplex = .longEdge
-        printInfo.outputType = .general
-        printInfo.jobName = document.fileName
-        
-        let printInteraction = UIPrintInteractionController.shared
-        printInteraction.printInfo = printInfo
-        printInteraction.printingItem = document.fileData
-        printInteraction.showsPageRange = true
-        printInteraction.present(animated: true, completionHandler: nil)
+//        guard UIPrintInteractionController.isPrintingAvailable else { return }
+//        guard UIPrintInteractionController.canPrint(document.fileData) else { return }
+//        guard document.password == nil else { return }
+//        let printInfo = UIPrintInfo.printInfo()
+//        printInfo.duplex = .longEdge
+//        printInfo.outputType = .general
+//        printInfo.jobName = document.fileName
+//
+//        let printInteraction = UIPrintInteractionController.shared
+//        printInteraction.printInfo = printInfo
+//        printInteraction.printingItem = document.fileData
+//        printInteraction.showsPageRange = true
+//        printInteraction.present(animated: true, completionHandler: nil)
+        guard let document = document, let fileUrl = document.fileURL else { return }
+        let vc = UIDocumentInteractionController(url: fileUrl)
+        if let actionButton = self.actionButton {
+            vc.presentOpenInMenu(from: actionButton, animated: true)
+        } else {
+            vc.presentOpenInMenu(from: CGRect(origin: self.view.center, size: CGSize.zero), in: self.view, animated: true)
+        }
     }
 }
 
@@ -292,5 +304,32 @@ extension PDFViewController: UIScrollViewDelegate {
             //更新頁數
             pageNoLabel.text = String(format: "%d / %d", (currentPageIndex + 1),  document.pageCount)
         }
+    }
+    
+    public func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        showPageNoLabel()
+    }
+    
+    public func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        
+    }
+    
+    public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        hidePageNoLabel()
+    }
+}
+
+//頁數Label的顯示控制
+extension PDFViewController {
+    fileprivate func showPageNoLabel() {
+        UIViewPropertyAnimator.runningPropertyAnimator(withDuration: 0.15, delay: 0, options: .curveLinear, animations: {
+            self.pageNoContainer.alpha = 1
+        }, completion: nil)
+    }
+    
+    fileprivate func hidePageNoLabel() {
+        UIViewPropertyAnimator.runningPropertyAnimator(withDuration: 0.15, delay: 0, options: .curveLinear, animations: {
+            self.pageNoContainer.alpha = 0
+        }, completion: nil)
     }
 }
