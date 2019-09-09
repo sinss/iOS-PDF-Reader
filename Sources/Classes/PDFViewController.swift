@@ -234,12 +234,10 @@ public final class PDFViewController: UIViewController {
 //        printInteraction.showsPageRange = true
 //        printInteraction.present(animated: true, completionHandler: nil)
         guard let document = document, let fileUrl = document.fileURL else { return }
-        let vc = UIDocumentInteractionController(url: fileUrl)
-        if let actionButton = self.actionButton {
-            vc.presentOpenInMenu(from: actionButton, animated: true)
-        } else {
-            vc.presentOpenInMenu(from: CGRect(origin: self.view.center, size: CGSize.zero), in: self.view, animated: true)
-        }
+        let vc = UIActivityViewController(activityItems: [fileUrl], applicationActivities: nil)
+        vc.popoverPresentationController?.sourceView = self.view
+        vc.popoverPresentationController?.barButtonItem = self.actionButton
+        present(vc, animated: true, completion: nil)
     }
 }
 
@@ -331,5 +329,15 @@ extension PDFViewController {
         UIViewPropertyAnimator.runningPropertyAnimator(withDuration: 0.15, delay: 0, options: .curveLinear, animations: {
             self.pageNoContainer.alpha = 0
         }, completion: nil)
+    }
+}
+
+extension PDFViewController: UIDocumentInteractionControllerDelegate {
+    public func documentInteractionController(_ controller: UIDocumentInteractionController, willBeginSendingToApplication application: String?) {
+        
+    }
+    
+    public func documentInteractionControllerDidDismissOpenInMenu(_ controller: UIDocumentInteractionController) {
+        
     }
 }
